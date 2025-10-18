@@ -45,6 +45,7 @@ All the implemented functions are listed here:
 
 ### Development Environment
 - **OS**: Windows 10
+- **IDE**: Visual Studio Code
 - **Compiler**: C++
 - **Build System**: CMake 3.5.0+ (as listed in the CMakeLists.txt file)
 - **UI Library**: ImGui
