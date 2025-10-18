@@ -5,7 +5,7 @@ In this assignment, I implemented the TicTacToe.cpp file to finish the Tic-Tac-T
 
 ## Implementation Details
 All the implemented functions are listed here:
-- `setUpBoard()`: 
+- `setUpBoard()`
 - `actionForEmptyHolder()`
 - `checkForWinner()`
 - `checkForDraw()`
