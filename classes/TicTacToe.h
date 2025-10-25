@@ -35,6 +35,14 @@ private:
     Bit *       PieceForPlayer(const int playerNumber);
     Player*     ownerAt(int index ) const;
 
+    // added helper functions for the AI
+    int         negamax(int depth, int currentPlayer, int maxDepth, int board[9]);
+    int         evaluateBoard(int board[9]);
+    int         checkWinnerInBoard(int board[9]);
+    bool        isBoardFullArray(int board[9]) const;
+    int         findBestMove();
+    int         countEmptySquares() const;
+
     Square      _grid[3][3];
 };
 

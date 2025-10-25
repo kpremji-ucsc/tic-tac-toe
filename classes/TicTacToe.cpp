@@ -59,6 +59,9 @@ void TicTacToe::setUpBoard()
     _gameOptions.rowX = 3;
     _gameOptions.rowY = 3;
 
+    // Set player 1 (O) as the AI player
+    setAIPlayer(AI_PLAYER);
+
     // here we initialize the images for the board
     for (int y = 0; y < 3; y++) {
         for (int x = 0; x < 3; x++) {
@@ -260,8 +263,169 @@ void TicTacToe::setStateString(const std::string &s)
 //
 // this is the function that will be called by the AI
 //
-void TicTacToe::updateAI() 
+void TicTacToe::updateAI()
 {
-    // we will implement the AI in the next assignment!
+    // find the best move and place the piece
+    int bestMoveIndex = findBestMove();
+
+    if (bestMoveIndex >= 0 && bestMoveIndex < 9) {
+        int y = bestMoveIndex / 3;
+        int x = bestMoveIndex % 3;
+
+        if (actionForEmptyHolder(&_grid[y][x])) {
+            endTurn();
+        }
+    }
+}
+
+//
+// negamax algorithm for calculating the best move based on a score
+//
+int TicTacToe::negamax(int depth, int currentPlayer, int maxDepth, int board[9])
+{
+    int winner = checkWinnerInBoard(board);
+    if (winner != 0) {
+        // simple winner checks
+        if (winner == AI_PLAYER + 1) {
+            return 10 - depth;
+        } else {
+            return depth - 10;
+        }
+    }
+
+    if (isBoardFullArray(board)) {
+        return 0;
+    }
+
+    if (depth >= maxDepth) {
+        return 0;
+    }
+
+    int bestScore = -1000;
+
+    // experiment with all possible moves
+    for (int i = 0; i < 9; i++) {
+        // check empty tiles
+        if (board[i] == 0) {
+            // place the move
+            board[i] = currentPlayer + 1;
+
+            // use recursion to validate the moves and decide if its good
+            int score = -negamax(depth + 1, 1 - currentPlayer, maxDepth, board);
+
+            // reset the move
+            board[i] = 0;
+
+            // update if better move was found
+            if (score > bestScore) {
+                bestScore = score;
+            }
+        }
+    }
+
+    return bestScore;
+}
+
+//
+// checks the board for a current winner
+//
+int TicTacToe::checkWinnerInBoard(int board[9])
+{
+    // check all winning combinations
+    int winningCombinations[8][3] = {
+        {0, 1, 2},
+        {3, 4, 5},
+        {6, 7, 8},
+
+        {0, 3, 6},
+        {1, 4, 7},
+        {2, 5, 8},
+
+        {0, 4, 8},
+        {2, 4, 6}
+    };
+
+    for (int i = 0; i < 8; i++) {
+        int val1 = board[winningCombinations[i][0]];
+        int val2 = board[winningCombinations[i][1]];
+        int val3 = board[winningCombinations[i][2]];
+
+        if (val1 != 0 && val1 == val2 && val2 == val3) {
+            return val1;
+        }
+    }
+
+    return 0;
+}
+
+
+bool TicTacToe::isBoardFullArray(int board[9]) const
+{
+    for (int i = 0; i < 9; i++) {
+        if (board[i] == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+int TicTacToe::countEmptySquares() const
+{
+    int count = 0;
+    for (int y = 0; y < 3; y++) {
+        for (int x = 0; x < 3; x++) {
+            if (_grid[y][x].bit() == nullptr) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+//
+// returns the position for where the best move would be located
+//
+int TicTacToe::findBestMove()
+{
+    int bestScore = -1000;
+    int bestMoveIndex = -1;
+
+    // use full DEPTH search of 9 for 9 squares
+    int maxDepth = 9;
+
+    int board[9];
+    for (int y = 0; y < 3; y++) {
+        for (int x = 0; x < 3; x++) {
+            int index = y * 3 + x;
+            Bit *bit = _grid[y][x].bit();
+            if (bit == nullptr) {
+                board[index] = 0;
+            } else {
+                board[index] = bit->getOwner()->playerNumber() + 1;
+            }
+        }
+    }
+
+    // try all possible moves
+    for (int i = 0; i < 9; i++) {
+        if (board[i] == 0) {
+            board[i] = AI_PLAYER + 1;
+
+            // call negamax to evaluate the move
+            int score = -negamax(1, HUMAN_PLAYER, maxDepth, board);
+
+            // reset it
+            board[i] = 0;
+
+            // update if better move
+            if (score > bestScore) {
+                bestScore = score;
+                bestMoveIndex = i;
+            }
+        }
+    }
+
+    return bestMoveIndex;
 }
 

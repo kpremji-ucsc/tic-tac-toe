@@ -50,5 +50,50 @@ All the implemented functions are listed here:
 - **Build System**: CMake 3.5.0+ (as listed in the CMakeLists.txt file)
 - **UI Library**: ImGui
 
+# AI Immplementation Update
+
+## Overview
+The assignment tasked me with creating an AI that will play the game against the player, and uses the negamax algorithm to determine its best moves. Although explained in the video that this algorithm may not be the most efficient, and will have repeat patterns, it would serve the purpose of the game and the assignment.
+
+## Implementation Details
+All the implemented functions are listed here:
+- `updateAI()`
+- `negamax()`
+- `evaluateBoard()`
+- `checkWinnerInBoard()`
+- `isBoardFullArray()`
+- `findBestMove()`
+- `countEmptySquares()`
+
+### AI Move (`updateAI()`)
+- Calls `findBestMove()` to determine the best move
+- Places the piece at the best move location
+- Ends the turn and moves on to the next player
+
+### Negamax Algorithm (`negamax()`)
+- Recursively evaluates all possible moves
+- Determines the best move based on a score
+- Returns the score for the current board state
+
+### Board Evaluation (`evaluateBoard()`)
+- Checks for a winner and returns a score based on the outcome
+- Returns 0 if tie game
+
+### Winner Check (`checkWinnerInBoard()`)
+- Checks all winning combinations
+- Returns the winning player or 0 if no winner
+
+### Board Full Check (`isBoardFullArray()`)
+- Returns true if all 9 squares are filled, false otherwise
+
+### Best Move (`findBestMove()`)
+- Calls `negamax()` to evaluate all possible moves
+- Returns the index of the best move
+
+### Empty Square Count (`countEmptySquares()`)
+- Counts the number of empty squares on the board lol
+
+
+
 
 

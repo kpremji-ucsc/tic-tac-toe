@@ -42,8 +42,6 @@ public:
 	// game defined game tags
 	int			gameTag() { return _gameTag; };
 	void		setGameTag(int tag) { _gameTag = tag; };
-	// move to a position
-	void		moveTo(const ImVec2 &point);
 	void		setOpacity(float opacity) { };
 private:
 	int			_restingZ;
@@ -52,4 +50,3 @@ private:
 	Player*		_owner;
 	int			_gameTag;
 };
-
